@@ -1,6 +1,7 @@
 # `simple-storage`
 
 Save POSTed JSON in a SQLite database.
+
 ## Development
 
 ```bash
@@ -8,7 +9,7 @@ Save POSTed JSON in a SQLite database.
 ./run_docker.sh
 ```
 
-## Usage
+## Post data
 
 ```bash
 curl --header "Content-Type: application/json" \
@@ -17,7 +18,13 @@ curl --header "Content-Type: application/json" \
   https://lab1.algorithmwatch.org/pushdataOP1MP0Unv0H84ZENIgMA
 ```
 
-## nginx
+## Deployment
+
+```bash
+./deploy.sh
+```
+
+### nginx
 
 ```nginx
 
@@ -25,4 +32,21 @@ location /pushdataOP1MP0Unv0H84ZENIgMA {
     proxy_pass http://localhost:5000;
 }
 
+```
+
+### systemd
+
+```systemd
+[Unit]
+Description=simple storage
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a simplestorage
+ExecStop=/usr/bin/docker stop simplestorage
+
+[Install]
+WantedBy=multi-user.target
 ```
